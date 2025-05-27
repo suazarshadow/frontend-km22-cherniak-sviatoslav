@@ -4,6 +4,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ПолянаБол Admin</title>
   <link rel="stylesheet" href="admin.css">
+  <script defer src="js/admindashboard.js"></script>
 </head>
 <body>
   <div class="admin-container">
@@ -18,12 +19,15 @@
           <li><a href="#news">Новини</a></li>
           <li><a href="#users">Користувачі</a></li>
           <li><a href="#groups">Групи</a></li>
-          <li><a href="#settings">Налаштування</a></li>
+          <li><a href="#settings">Налаштування</a></li> 
         </ul>
       </nav>
     </aside>
 
     <main class="main-panel">
+      <div style="text-align: right; margin: 1rem;">
+        <a href="index.html" class="back-button">← Назад на сайт</a>
+      </div>
       <section id="dashboard" class="active">
         <h1>Дашборд</h1>
         <div class="cards">
@@ -33,7 +37,7 @@
         </div>
       </section>
 
-      <section id="matches">
+      <section id="matches" class="active">
         <h2>Список матчів</h2>
         <table>
           <thead>
