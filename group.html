@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ПолянаБол — Групи та Плей-оф</title>
+  <link rel="stylesheet" href="style.css">  
+  <link rel="stylesheet" href="group.css">  
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="logo">
+        <a href="#">ПолянаБол</a>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="index.html">Головна</a></li>
+          <li><a href="teams.html">Команди</a></li>
+          <li><a href="group.html">Сітка</a></li>
+          <li><a href="players.html">Гравці</a></li>
+          <li><a href="login.html">Увійти</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="matches">
+    <h2 class="center-heading">Груповий етап та Плей-оф</h2>
+
+    <div class="group-tabs">
+      <button data-target="group-a">Група A</button>
+      <button data-target="group-b">Група B</button>
+      <button data-target="playoff">Плей-оф</button>
+    </div>
+
+    <div id="group-a" class="group-view">
+      <h3>Група A</h3>
+      <table class="compact-table">
+        <thead>
+          <tr><th>Команда</th><th>Ігор</th><th>Очки</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Київські Яструби</td><td>3</td><td>9</td></tr>
+          <tr><td>Львівські Леви</td><td>3</td><td>6</td></tr>
+          <tr><td>Полтавські Орли</td><td>3</td><td>3</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="group-b" class="group-view">
+      <h3>Група B</h3>
+      <table class="compact-table">
+        <thead>
+          <tr><th>Команда</th><th>Ігор</th><th>Очки</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Одеські Дельфіни</td><td>3</td><td>9</td></tr>
+          <tr><td>Харківські Ведмеді</td><td>3</td><td>6</td></tr>
+          <tr><td>Дніпровські Риси</td><td>3</td><td>3</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="playoff" class="group-view">
+      <h3>Сітка Плей-оф</h3>
+      <div class="playoff-grid">
+        <div class="bracket">
+          <h4>Півфінал 1</h4>
+          <p>Київські Яструби vs Харківські Ведмеді</p>
+        </div>
+        <div class="bracket">
+          <h4>Півфінал 2</h4>
+          <p>Одеські Дельфіни vs Львівські Леви</p>
+        </div>
+        <div class="bracket">
+          <h4>Фінал</h4>
+          <p>Очікується</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 ПолянаБол. Всі права захищені.</p>
+    </div>
+  </footer>
+</body>
+</html>

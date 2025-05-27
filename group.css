@@ -1,0 +1,47 @@
+.group-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    justify-content: center;
+}
+
+.group-tabs button {
+    background-color: var(--main-color);
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    cursor: pointer;
+}
+
+.group-tabs button.active {
+    background-color: var(--accent-color);
+}
+
+.group-view {
+    display: none;
+}
+
+.group-view.active {
+    display: block;
+}
+
+.playoff-grid {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+.bracket {
+    background: white;
+    border: 1px solid #ccc;
+    padding: 1rem;
+    width: 200px;
+}
+
+.bracket h4 {
+    margin-top: 0;
+    text-align: center;
+    color: var(--main-color);
+}
