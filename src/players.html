@@ -1,0 +1,85 @@
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ПолянаБол — Гравці</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="players.css">
+  <script defer src="js/players.js"></script>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="logo">
+        <a href="#">
+          <img src="img/logo.png" alt="CВЛ Логотип" class="logo-img">
+        </a>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="index.html">Головна</a></li>
+          <li><a href="teams.html">Команди</a></li>
+          <li><a href="group.html">Сітка</a></li>
+          <li><a href="players.html">Гравці</a></li>
+          <li><a href="login.html">Увійти</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <h2 class="center-heading">Гравці ліги</h2>
+
+    <div class="filter-bar">
+      <label for="teamFilter">Команда:</label>
+      <select id="teamFilter">
+        <option value="all">Всі</option>
+        <option value="kyiv">Київські Яструби</option>
+        <option value="lviv">Львівські Леви</option>
+        <option value="odesa">Одеські Дельфіни</option>
+      </select>
+
+      <label for="positionFilter">Позиція:</label>
+      <select id="positionFilter">
+        <option value="all">Всі</option>
+        <option value="dogr">Догравальник</option>
+        <option value="libero">Ліберо</option>
+        <option value="block">Блокуючий</option>
+        <option value="zvaz">Зв’язуючий</option>
+      </select>
+    </div>
+
+    <div class="players-grid">
+      <div class="player-card" data-team="kyiv" data-position="dogr">
+        <img src="img/player1.jpg" alt="Гравець 1" class="player-photo">
+        <div class="player-name">Іван Коваль</div>
+        <div class="player-position">Київські Яструби</div>
+      </div>
+
+      <div class="player-card" data-team="lviv" data-position="libero">
+        <img src="img/player2.jpg" alt="Гравець 2" class="player-photo">
+        <div class="player-name">Олексій Бондаренко</div>
+        <div class="player-position">Львівські Леви</div>
+      </div>
+
+      <div class="player-card" data-team="odesa" data-position="block">
+        <img src="img/player3.jpg" alt="Гравець 3" class="player-photo">
+        <div class="player-name">Андрій Савчук</div>
+        <div class="player-position">Одеські Дельфіни</div>
+      </div>
+
+      <div class="player-card" data-team="kyiv" data-position="zvaz">
+        <img src="img/player4.jpg" alt="Гравець 4" class="player-photo">
+        <div class="player-name">Дмитро Іванченко</div>
+        <div class="player-position">Київські Яструби</div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 ПолянаБол. Всі права захищені.</p>
+    </div>
+  </footer>
+</body>
+</html>
