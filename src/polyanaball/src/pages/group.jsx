@@ -1,70 +1,103 @@
-import React, { useState } from "react";
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { getCurrentUser, logout } from "./auth";
+import logo from "../img/logo.png";
 
-export default function GroupsPage() {
-  const [activeTab, setActiveTab] = useState("group-a");
+
+
+
+const user = getCurrentUser();
+
+const GroupsLeaders = () => {
+  const [groups, setGroups] = useState([]);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetch("http://localhost:3001/api/groups")
+      .then(res => {
+        if (!res.ok) throw new Error("Помилка при завантаженні груп");
+        return res.json();
+      })
+      .then(data => setGroups(data))
+      .catch(err => setError(err.message));
+  }, []);
+
+  const renderGroupTable = (group) => {
+    const teams = [
+      { name: group.team1_name, sets: group.team1_sets || 0 },
+      { name: group.team2_name, sets: group.team2_sets || 0 },
+      { name: group.team3_name, sets: group.team3_sets || 0 },
+      { name: group.team4_name, sets: group.team4_sets || 0 }
+    ]
+      .filter(team => team.name)
+      .sort((a, b) => b.sets - a.sets);
+
+    return (
+      <div key={group.id} className="table-wrapper" style={{ marginBottom: "3rem" }}>
+        <h3 className="centered-title">{group.name}</h3>
+        <table className="compact-table volleyball-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Команда</th>
+              <th>Сети</th>
+            </tr>
+          </thead>
+          <tbody>
+            {teams.map((team, index) => (
+              <tr key={index} className={index === 0 ? "qualified" : ""}>
+                <td>{index + 1}</td>
+                <td className="team-name">{team.name}</td>
+                <td className={index === 0 ? "win" : ""}>{team.sets}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  };
 
   return (
-    <main className="matches">
-      <h2 className="center-heading">Груповий етап та Плей-оф</h2>
-
-      <div className="group-tabs">
-        <button onClick={() => setActiveTab("group-a")}>Група A</button>
-        <button onClick={() => setActiveTab("group-b")}>Група B</button>
-        <button onClick={() => setActiveTab("playoff")}>Плей-оф</button>
-      </div>
-
-      {activeTab === "group-a" && (
-        <div id="group-a" className="group-view">
-          <h3>Група A</h3>
-          <table className="compact-table">
-            <thead>
-              <tr><th>Команда</th><th>Ігор</th><th>Очки</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>Київські Яструби</td><td>3</td><td>9</td></tr>
-              <tr><td>Львівські Леви</td><td>3</td><td>6</td></tr>
-              <tr><td>Полтавські Орли</td><td>3</td><td>3</td></tr>
-            </tbody>
-          </table>
-        </div>
-      )}
-
-      {activeTab === "group-b" && (
-        <div id="group-b" className="group-view">
-          <h3>Група B</h3>
-          <table className="compact-table">
-            <thead>
-              <tr><th>Команда</th><th>Ігор</th><th>Очки</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>Одеські Дельфіни</td><td>3</td><td>9</td></tr>
-              <tr><td>Харківські Ведмеді</td><td>3</td><td>6</td></tr>
-              <tr><td>Дніпровські Риси</td><td>3</td><td>3</td></tr>
-            </tbody>
-          </table>
-        </div>
-      )}
-
-      {activeTab === "playoff" && (
-        <div id="playoff" className="group-view">
-          <h3>Сітка Плей-оф</h3>
-          <div className="playoff-grid">
-            <div className="bracket">
-              <h4>Півфінал 1</h4>
-              <p>Київські Яструби vs Харківські Ведмеді</p>
-            </div>
-            <div className="bracket">
-              <h4>Півфінал 2</h4>
-              <p>Одеські Дельфіни vs Львівські Леви</p>
-            </div>
-            <div className="bracket">
-              <h4>Фінал</h4>
-              <p>Очікується</p>
-            </div>
+    <div className="main-wrapper">
+      <header>
+        <div className="container">
+          <div className="logo">
+            <Link to="/">
+              <img src={logo} alt="Логотип" className="logo-img" />
+            </Link>
           </div>
+          <nav>
+            <ul>
+              <li><Link to="/home">Головна</Link></li>
+              <li><Link to="/teams">Команди</Link></li>
+              <li><Link to="/group">Сітка</Link></li>
+              <li><Link to="/players">Гравці</Link></li>
+              {user ? (
+                <>
+                      <li><Link to={user.role === "admin" ? "/admin" : "/user"}>Мій кабінет</Link></li>
+                      <li><button onClick={() => { logout(); window.location.reload(); }}>Вийти</button></li>
+                    </>
+                  ) : (
+                    <li><Link to="/login">Увійти</Link></li>
+                  )}
+            </ul>
+          </nav>
         </div>
-      )}
-    </main>
+      </header>
+      <main className="matches-centered">
+        <h2 className="centered-title">Таблиці лідерів по групах</h2>
+        {error ? <p className="error">{error}</p> :
+          groups.length === 0 ? <p className="loading">Завантаження груп...</p> :
+            groups.map(group => renderGroupTable(group))
+        }
+      </main>
+      <footer>
+        <div className="container">
+          <p>&copy; 2025 ПолянаБол. Всі права захищені.</p>
+        </div>
+      </footer>
+    </div>
   );
-}
+};
+
+export default GroupsLeaders;

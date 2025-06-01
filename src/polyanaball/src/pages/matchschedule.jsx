@@ -1,67 +1,84 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import logo from "../img/logo.png";
 
-export default function Matches() {
+
+ 
+
+const MatchesList = () => {
+  const [matches, setMatches] = useState([]);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetch("http://localhost:3001/api/matches")
+      .then(res => {
+        if (!res.ok) throw new Error("Не вдалося завантажити матчі");
+        return res.json();
+      })
+      .then(data => setMatches(data))
+      .catch(err => setError(err.message));
+  }, []);
+
   return (
-    <div>
-      <header>
-        <div className="container">
-          <div className="logo">
-            <Link to="/">
-              <img src="../img/logo.png" alt="CВЛ Логотип" className="logo-img" />
-            </Link>
+    <div className="main-wrapper">
+       <header>
+          <div className="container">
+            <div className="logo">
+              <Link to="/">
+                <img src={logo} alt="Логотип" className="logo-img" />
+              </Link>
+            </div>
+            <nav>
+              <ul>
+                <li><Link to="/home">Головна</Link></li>
+                <li><Link to="/teams">Команди</Link></li>
+                <li><Link to="/group">Сітка</Link></li>
+                <li><Link to="/players">Гравці</Link></li>
+                <li><Link to="/login">Увійти</Link></li>
+              </ul>
+            </nav>
           </div>
-          <nav>
-            <ul>
-              <li><Link to="/home">Головна</Link></li>
-              <li><Link to="/teams">Команди</Link></li>
-              <li><Link to="/group">Сітка</Link></li>
-              <li><Link to="/players">Гравці</Link></li>
-              <li><Link to="/login">Увійти</Link></li>
-            </ul>
-          </nav>
-        </div>
-      </header>
-
-      <main className="matches">
-        <h2 className="center-heading">Відстеження матчів</h2>
-        <div className="tab-bar">
-          <button className="tab-button" data-target="live-tab">LIVE</button>
-          <button className="tab-button" data-target="upcoming-tab">Найближчі</button>
-          <button className="tab-button" data-target="results-tab">Результати</button>
-        </div>
-
-        <div className="tab-content" id="live-tab">
-          <h3>Live матчі</h3>
-          <p className="match-live">Київські Яструби vs Львівські Леви — 2:1 (25-22, 23-25, 25-20)</p>
-        </div>
-
-        <div className="tab-content" id="upcoming-tab">
-          <h3>Найближчі матчі</h3>
-          <table className="compact-table">
-            <thead>
-              <tr><th>Дата</th><th>Команда A</th><th>Команда B</th><th>Місце</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>28.05.2025</td><td>Харківські Ведмеді</td><td>Одеські Дельфіни</td><td>Харків Арена</td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div className="tab-content" id="results-tab">
-          <h3>Останні результати</h3>
-          <ul>
-            <li>Київські Яструби 3:1 Львівські Леви</li>
-            <li>Одеські Дельфіни 2:3 Дніпровські Риси</li>
-          </ul>
-        </div>
+        </header>
+      <main className="matches-centered">
+        <h2 className="centered-title">Усі матчі</h2>
+        {error ? (
+          <p className="error">{error}</p>
+        ) : matches.length === 0 ? (
+          <p className="loading">Завантаження матчів...</p>
+        ) : (
+          <div className="matches-grid">
+            {matches.map((match) => (
+              <div className="match-card" key={match.id}>
+                <div className="match-teams">
+                  <span>{match.team_a_name}</span>
+                  <span className="vs">vs</span>
+                  <span>{match.team_b_name}</span>
+                </div>
+                <div className="match-score">
+                  <div className="set">{match.score_a ?? "-"}</div>
+                  <div className="set">{match.score_b ?? "-"}</div>
+                </div>
+                <div className="match-details">
+                  <div>{new Date(match.date).toLocaleDateString()}</div>
+                  <div>{match.location || "Невідомо"}</div>
+                  <div className="match-status">
+                    <span className={match.status?.toLowerCase()}>
+                      {match.status}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </main>
-
-      <footer>
-        <div className="container">
-          <p>&copy; 2025 ПолянаБол. Всі права захищені.</p>
-        </div>
-      </footer>
+       <footer>
+          <div className="container">
+            <p>&copy; 2025 ПолянаБол. Всі права захищені.</p>
+          </div>
+        </footer>
     </div>
   );
-}
+};
+
+export default MatchesList;

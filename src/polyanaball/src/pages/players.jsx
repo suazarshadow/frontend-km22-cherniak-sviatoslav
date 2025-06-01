@@ -1,75 +1,112 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import logo from "../img/logo.png";
+import { getCurrentUser, logout } from "./auth";
 
 export default function Players() {
+  const user = getCurrentUser();
+  const [players, setPlayers] = useState([]);
+  const [filtered, setFiltered] = useState([]);
+  const [teams, setTeams] = useState([]);
+  const [filters, setFilters] = useState({ team: "all", position: "all" });
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchPlayers = async () => {
+      try {
+        const res = await fetch("http://localhost:3001/api/players");
+        if (!res.ok) throw new Error("Не вдалося отримати гравців");
+        const data = await res.json();
+        setPlayers(data);
+        setFiltered(data)
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+    fetchPlayers();
+  }, []);
+
+  useEffect(() => {
+    let filteredData = players;
+
+    if (filters.team !== "all") {
+      filteredData = filteredData.filter(p => p.team === filters.team);
+    }
+
+    if (filters.position !== "all") {
+      filteredData = filteredData.filter(p => p.position === filters.position);
+    }
+
+    setFiltered(filteredData);
+  }, [filters, players]);
+
+  const handleFilterChange = (e) => {
+    setFilters(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
   return (
-    <div>
+    <div className="main-wrapper">
       <header>
         <div className="container">
-          <div className="logo">
+          <div className="logo centered-logo">
             <Link to="/">
-              <img src="/img/logo.png" alt="CВЛ Логотип" className="logo-img" />
+              <img src={logo} alt="CВЛ Логотип" className="logo-img" />
             </Link>
           </div>
           <nav>
             <ul>
-              <li><Link to="/">Головна</Link></li>
+              <li><Link to="/home">Головна</Link></li>
               <li><Link to="/teams">Команди</Link></li>
               <li><Link to="/group">Сітка</Link></li>
               <li><Link to="/players">Гравці</Link></li>
-              <li><Link to="/login">Увійти</Link></li>
+              {user ? (
+                <>
+                  <li><Link to={user.role === "admin" ? "/admin" : "/user"}>Мій кабінет</Link></li>
+                  <li><button onClick={() => { logout(); window.location.reload(); }}>Вийти</button></li>
+                </>
+              ) : (
+                <li><Link to="/login">Увійти</Link></li>
+              )}
             </ul>
           </nav>
         </div>
       </header>
 
       <main>
-        <h2 className="center-heading">Гравці ліги</h2>
+        <h2 className="centered-title">Гравці ліги</h2>
 
         <div className="filter-bar">
-          <label htmlFor="teamFilter">Команда:</label>
-          <select id="teamFilter">
+          <label htmlFor="team">Команда:</label>
+          <label htmlFor="position">Позиція:</label>
+          <select name="position" id="position" onChange={handleFilterChange} value={filters.position}>
             <option value="all">Всі</option>
-            <option value="kyiv">Київські Яструби</option>
-            <option value="lviv">Львівські Леви</option>
-            <option value="odesa">Одеські Дельфіни</option>
-          </select>
-
-          <label htmlFor="positionFilter">Позиція:</label>
-          <select id="positionFilter">
-            <option value="all">Всі</option>
-            <option value="dogr">Догравальник</option>
-            <option value="libero">Ліберо</option>
-            <option value="block">Блокуючий</option>
-            <option value="zvaz">Зв’язуючий</option>
+            <option value="Догравальник">Догравальник</option>
+            <option value="Ліберо">Ліберо</option>
+            <option value="Центральний Блокуючий">Центральний Блокуючий</option>
+            <option value="Зв’язуючий">Зв’язуючий</option>
           </select>
         </div>
 
-        <div className="players-grid">
-          <div className="player-card" data-team="kyiv" data-position="dogr">
-            <img src="/img/player1.jpg" alt="Гравець 1" className="player-photo" />
-            <div className="player-name">Іван Коваль</div>
-            <div className="player-position">Київські Яструби</div>
+        {error ? (
+          <div className="error">{error}</div>
+        ) : (
+          <div className="players-grid">
+            {filtered.length === 0 ? (
+              <p style={{ textAlign: "center" }}>Гравців не знайдено</p>
+            ) : (
+              filtered.map(player => (
+                <div className="player-card" key={player.id}>
+                  <div className="player-name">{player.name}</div>
+                  <div className="player-position">{player.team}</div>
+                  <div className="player-position small-text">{player.position}</div>
+                </div>
+              ))
+            )}
           </div>
-
-          <div className="player-card" data-team="lviv" data-position="libero">
-            <img src="/img/player2.jpg" alt="Гравець 2" className="player-photo" />
-            <div className="player-name">Олексій Бондаренко</div>
-            <div className="player-position">Львівські Леви</div>
-          </div>
-
-          <div className="player-card" data-team="odesa" data-position="block">
-            <img src="/img/player3.jpg" alt="Гравець 3" className="player-photo" />
-            <div className="player-name">Андрій Савчук</div>
-            <div className="player-position">Одеські Дельфіни</div>
-          </div>
-
-          <div className="player-card" data-team="kyiv" data-position="zvaz">
-            <img src="/img/player4.jpg" alt="Гравець 4" className="player-photo" />
-            <div className="player-name">Дмитро Іванченко</div>
-            <div className="player-position">Київські Яструби</div>
-          </div>
-        </div>
+        )}
       </main>
 
       <footer>

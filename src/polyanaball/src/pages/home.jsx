@@ -1,30 +1,40 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { getCurrentUser, logout } from "./auth";
+import WeatherWidget from './weatherwidget.jsx';
+import imgmap from "../img/imgmap.jpg";
+import logo from "../img/logo.png"
 
-export default function Home() {
+
+
+export default function Home(){
+  const user = getCurrentUser();
   return (
     <div className="main-wrapper">
-      <div className="top-ticker">
-        <div className="ticker-inner" id="topTicker">
-        </div>
-      </div>
 
       <header>
         <div className="container">
           <div className="logo">
             <Link to="/">
-              <img src="../img/logo.png" alt="CВЛ Логотип" className="logo-img" />
+              <img src= {logo} alt="CВЛ Логотип" className="logo-img" />
             </Link>
           </div>
-          <nav>
-            <ul>
-              <li><Link to="/">Головна</Link></li>
-              <li><Link to="/teams">Команди</Link></li>
-              <li><Link to="/group">Сітка</Link></li>
-              <li><Link to="/players">Гравці</Link></li>
-              <li><Link to="/login">Увійти</Link></li>
-            </ul>
-          </nav>
+            <nav>
+              <ul>
+                <li><Link to="/home">Головна</Link></li>
+                <li><Link to="/teams">Команди</Link></li>
+                <li><Link to="/group">Сітка</Link></li>
+                <li><Link to="/players">Гравці</Link></li>
+                {user ? (
+                  <>
+                        <li><Link to={user.role === "admin" ? "/admin" : "/user"}>Мій кабінет</Link></li>
+                        <li><button onClick={() => { logout(); window.location.reload(); }}>Вийти</button></li>
+                      </>
+                    ) : (
+                      <li><Link to="/login">Увійти</Link></li>
+                    )}
+              </ul>
+            </nav>
         </div>
       </header>
 
@@ -86,8 +96,16 @@ export default function Home() {
               </table>
             </div>
             <div className="more-button">
-              <Link to="/matches">Більше матчів →</Link>
+              <Link to="/matchschedule">Більше матчів →</Link>
             </div>
+          </div>
+        </section>
+
+
+        <section className="weather-section">
+          <div className="container">
+            <h2 className="center-heading">Прогноз погоди</h2>
+            <WeatherWidget />
           </div>
         </section>
 
@@ -99,9 +117,29 @@ export default function Home() {
               <p className="promo-text">
                 Готові показати свій рівень? Зареєструйте команду та приєднуйтесь до змагань найкращих волейбольних колективів країни!
               </p>
-              <Link to="/login" className="register-button">Зареєструвати команду</Link>
+              <Link to="/user" className="register-button">Зареєструвати команду</Link>
             </div>
           </div>
+        </section>
+        <section className="image-map-section">
+          <img src={imgmap} useMap="#main-map" alt="Інтерактивна мапа" className="image-map" />
+
+          <map name="main-map">
+            <area
+              shape="rect"
+              coords="115,322,1086,508"
+              title="Команди"
+              href="/teams"
+              alt="Команди"
+            />
+            <area
+              shape="rect"
+              coords="522,232,1599,387"
+              title="Групи"
+              href="/group"
+              alt="Групи"
+            />
+          </map>
         </section>
       </main>
 
